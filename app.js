@@ -93,8 +93,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/welcome", auth, (req, res) => {
-  res.status(200).send("Welcome 🙌 ");
+app.get("/protected", auth, (req, res) => {
+  res.status(200).send("Protected GET");
 });
 
 app.post("/book", auth, async (req, res) => {
@@ -104,7 +104,7 @@ app.post("/book", auth, async (req, res) => {
     const book = await Book.create({
       title
     });
-    
+
     res.status(201).json(book);
   } catch (err) {
     console.log(err);

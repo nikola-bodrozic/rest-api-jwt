@@ -26,10 +26,10 @@ curl -X POST http://localhost:4001/register -H 'Content-Type: application/json' 
 # user login and getting JWT
 curl -X POST http://localhost:4001/login -H 'Content-Type: application/json' -d '{"email":"qw@qw.io", "password":"1234567"}'
 
-# pass JWT in header
-curl -X GET http://localhost:4001/welcome -H 'Content-Type: application/json' -H 'x-access-token: '
+# pass JWT in header GET request
+curl -X GET http://localhost:4001/protected -H 'x-access-token: '
 
-#add a book
+# add a book POST request
 curl -X POST http://localhost:4001/book -H 'Content-Type: application/json' -H 'x-access-token: ' -d '{"title":"cool title"}'
 ```
 
