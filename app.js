@@ -97,6 +97,8 @@ app.get("/protected", auth, (req, res) => {
   res.status(200).send("Protected GET");
 });
 
+
+// Book entity
 app.post("/book", auth, async (req, res) => {
   try{
     const { title } = req.body;
@@ -110,6 +112,19 @@ app.post("/book", auth, async (req, res) => {
     console.log(err);
   }
 });
+
+app.get("/books", async (req, res) => {
+  let books = await Book.find({});
+  const count = await Book.count({});
+  console.log('there are %d books', count);
+  if(count > 0) res.status(200).json({books})
+  res.status(200).json({"msg": "no books"})
+});
+
+app.delete("/book/:id", auth, async (req, res) => {
+  if(await Book.findByIdAndDelete({ _id: req.params.id })) return res.send(`Deleted Book ID ${req.params.id} `);
+  return res.send(`Book ID ${req.params.id} doesnot exist`);
+})
 
 // This should be the last route else any after it won't work
 app.use("*", (req, res) => {
