@@ -117,13 +117,17 @@ app.get("/books", async (req, res) => {
   let books = await Book.find({});
   const count = await Book.count({});
   console.log('there are %d books', count);
-  if(count > 0) res.status(200).json({books})
-  res.status(200).json({"msg": "no books"})
+  if(count > 0) 
+    res.status(200).json({books})
+  else
+    res.status(200).json({"msg": "no books"})
 });
 
 app.delete("/book/:id", auth, async (req, res) => {
-  if(await Book.findByIdAndDelete({ _id: req.params.id })) return res.send(`Deleted Book ID ${req.params.id} `);
-  return res.send(`Book ID ${req.params.id} doesnot exist`);
+  if(await Book.findByIdAndDelete({ _id: req.params.id })) 
+    return res.send(`Deleted Book ID ${req.params.id} `);
+  else
+    return res.send(`Book ID ${req.params.id} doesnot exist`);
 })
 
 // This should be the last route else any after it won't work
