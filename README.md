@@ -27,6 +27,9 @@ curl -X POST http://localhost:4001/register -H 'Content-Type: application/json' 
 curl -X POST http://localhost:4001/login -H 'Content-Type: application/json' -d '{"email":"qw@qw.io", "password":"1234567"}'
 
 # pass JWT in header
-curl -X GET http://localhost:4001/welcome -H 'Content-Type: application/json' -H 'Content-Type: application/json' -H 'x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjFmYzg4Mjc0MzEyODU3ZTUyYTJkYTI4IiwiZW1haWwiOiJxd0Bxdy5pbyIsImlhdCI6MTY0Mzk0MDE5OCwiZXhwIjoxNjQzOTQ3Mzk4fQ.zCrwuFnyDdVXWT0Fc6BqguEi7nlwE6I4Ci-ib79F328'
+curl -X GET http://localhost:4001/welcome -H 'Content-Type: application/json' -H 'x-access-token: '
+
+#add a book
+curl -X POST http://localhost:4001/book -H 'Content-Type: application/json' -H 'x-access-token: ' -d '{"title":"cool title"}'
 ```
 

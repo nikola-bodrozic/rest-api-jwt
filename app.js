@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("./model/user");
+const Book = require("./model/book");
 const auth = require("./middleware/auth");
 
 const app = express();
@@ -94,6 +95,20 @@ app.post("/login", async (req, res) => {
 
 app.get("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome 🙌 ");
+});
+
+app.post("/book", auth, async (req, res) => {
+  try{
+    const { title } = req.body;
+
+    const book = await Book.create({
+      title
+    });
+    
+    res.status(201).json(book);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 // This should be the last route else any after it won't work
