@@ -87,20 +87,20 @@ app.post("/login", async (req, res) => {
       // user
       res.status(200).json(user);
     }
-    res.status(400).send("Invalid Credentials");
+    res.status(401).send("Invalid Credentials");
   } catch (err) {
     console.log(err);
   }
 });
 
 app.get("/protected", auth, (req, res) => {
-  res.status(200).send("Protected GET");
+  res.status(200).send("Protected GET route");
 });
 
 
 // Book entity
 app.post("/book", auth, async (req, res) => {
-  try{
+  try {
     const { title } = req.body;
 
     const book = await Book.create({
@@ -113,21 +113,45 @@ app.post("/book", auth, async (req, res) => {
   }
 });
 
-app.get("/books", async (req, res) => {
-  let books = await Book.find({});
-  const count = await Book.count({});
-  console.log('there are %d books', count);
-  if(count > 0) 
-    res.status(200).json({books})
-  else
-    res.status(200).json({"msg": "no books"})
+app.get('/books', async (req, res) => {
+  try {
+    const books = await Book.find({})
+    Book.countDocuments({}, function (err, count) {
+      console.log('there are %d books', count);
+    });
+    console.log(books.length)
+    if (books.length === 0) res.status(200).json({ "msg": "there are no books" });
+    else
+      res.status(200).json(books);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get('/books/:id', async function (req, res) {
+  try {
+    const book = await Book.findById(req.params.id)
+    console.log(book)
+    if (book === null) res.status(404).json({ "msg": "there is no book ID:" + req.params.id });
+    else
+      res.status(200).json(book);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.delete("/book/:id", auth, async (req, res) => {
-  if(await Book.findByIdAndDelete({ _id: req.params.id })) 
-    return res.send(`Deleted Book ID ${req.params.id} `);
-  else
-    return res.send(`Book ID ${req.params.id} doesnot exist`);
+  try {
+    console.log(await Book.findById(req.params.id).countDocuments({ _id: req.params.id }))
+
+    let book = await Book.findByIdAndDelete({ _id: req.params.id })
+
+    console.log(await Book.findById(req.params.id).countDocuments({ _id: req.params.id }))
+
+    res.status(200).json({ "msg": "Book ID:" + req.params.id + " is deleted"});
+  } catch (err) {
+    console.log(err);
+  }
 })
 
 // This should be the last route else any after it won't work
