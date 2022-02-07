@@ -20,6 +20,9 @@ npm run dev
 testing protected end points
 
 ```sh
+# create user
+curl -X POST http://localhost:4001/register -H 'Content-Type: application/json' -d '{"first_name":"test", "last_name":"test", "email":"test@example.com", "password":"1234567"}'
+
 # user login and getting JWT
 curl -X POST http://localhost:4001/login -H 'Content-Type: application/json' -d '{"email":"test@example.com", "password":"1234567"}'
 
