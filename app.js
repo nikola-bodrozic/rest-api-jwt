@@ -98,11 +98,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/protected", auth, (req, res) => {
-  res.status(200).send("Protected GET route");
-});
-
-
 // Book entity
 app.post("/book", auth, async (req, res) => {
   try {
@@ -121,9 +116,6 @@ app.post("/book", auth, async (req, res) => {
 app.get('/books', async (req, res) => {
   try {
     const books = await Book.find({})
-    Book.countDocuments({}, function (err, count) {
-      console.log('there are %d books', count);
-    });
     console.log(books.length)
     if (books.length === 0) res.status(200).json({ "msg": "there are no books" });
     else
@@ -147,13 +139,13 @@ app.get('/books/:id', async function (req, res) {
 
 app.delete("/book/:id", auth, async (req, res) => {
   try {
-    console.log(await Book.findById(req.params.id).countDocuments({ _id: req.params.id }))
-
-    let book = await Book.findByIdAndDelete({ _id: req.params.id })
-
-    console.log(await Book.findById(req.params.id).countDocuments({ _id: req.params.id }))
-
-    res.status(200).json({ "msg": "Book ID:" + req.params.id + " is deleted"});
+    let book = await Book.countDocuments({ _id: req.params.id })
+    if (book === 1) {
+      await Book.findByIdAndDelete({ _id: req.params.id })
+      res.status(200).json({ "msg": "Book ID:" + req.params.id + " is deleted" });
+    } else {
+      res.status(200).json({ "msg": "Book ID:" + req.params.id + " doesnot exist" });
+    }
   } catch (err) {
     console.log(err);
   }
