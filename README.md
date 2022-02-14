@@ -1,40 +1,44 @@
 # REST API with JWT
 
+## Set Up
+
 content of .env file
 
-```
+```text
 API_PORT=4001
 MONGO_URI=mongodb://root:example@localhost:27017/admin
-TOKEN_KEY=random4654434hbgh
+JWT_SERVER_SECRET=s9RaZepGwd20NXTgMNUJy92qQKHzurb9
+JWT_EXPIRES_IN=1d
 ```
 
-set up
+Install and run
 
 ```sh
 npm install
-# bring up Docker stack with Mongo
+# bring up Docker stack with Mongo & Mongo Express
 docker-compose up -d
-npm run dev
+npm start
 ```
 
-testing protected end points
+## Testing End Points
 
 ```sh
 # create user
-curl -X POST http://localhost:4001/register -H 'Content-Type: application/json' -d '{"first_name":"test", "last_name":"test", "email":"test@example.com", "password":"1234567"}'
+curl -X POST http://localhost:4001/api/user/register -H 'Content-Type: application/json' -d '{"name":"test123", "email":"test@example.com", "password":"1234567"}'
 
 # user login and getting JWT
-curl -X POST http://localhost:4001/login -H 'Content-Type: application/json' -d '{"email":"test@example.com", "password":"1234567"}'
+curl -i -X POST http://localhost:4001/api/user/login -H 'Content-Type: application/json' -d '{"email":"test@example.com", "password":"1234567"}'
 
-# add a book POST request
-curl -X POST http://localhost:4001/book -H 'Content-Type: application/json' -d '{"title":"cool title"}' -H 'x-access-token: '
+# add a book POST request on protected route
+curl -X POST http://localhost:4001/api/books -H 'Content-Type: application/json' -H 'Authorization: Bearer ' -d '{"title":"cool title"}'
 
 # list books not protected route
-curl -X GET http://localhost:4001/books
+curl -X GET http://localhost:4001/api/books | jq
 
 # get single book
-curl -X GET http://localhost:4001/books/BOOK-ID
+curl -X GET http://localhost:4001/api/books/BOOKID -H 'Content-Type: application/json'
 
 # Delete book
-curl -X DELETE http://localhost:4001/book/BOOK-ID -H 'x-access-token: '
+curl -X DELETE http://localhost:4001/api/books/BOOKID -H 'Content-Type: application/json' -H 'Authorization: Bearer '
 ```
+
