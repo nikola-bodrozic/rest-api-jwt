@@ -3,6 +3,7 @@ const verifyToken = require("./verifyToken")
 const User = require("../model/User")
 const Book = require("../model/Books");
 
+// match URL http://localhost:4001/api/books
 router.get('/', async (req, res) => {
 	try {
 		const books = await Book.find({})
@@ -15,6 +16,7 @@ router.get('/', async (req, res) => {
 	}
 });
 
+// match URL http://localhost:4001/api/books/:id
 router.get('/:id', async function (req, res) {
 	try {
 		const book = await Book.findById(req.params.id)
@@ -27,6 +29,7 @@ router.get('/:id', async function (req, res) {
 	}
 });
 
+// match URL http://localhost:4001/api/books
 router.post("/", verifyToken, async (req, res) => {
 	try {
 		userInfo = await User.findById({ _id: req.user._id })
@@ -36,17 +39,18 @@ router.post("/", verifyToken, async (req, res) => {
 			title
 		});
 
-		res.status(201).json({ "msg": `user ${userInfo.email} created book id: ${book._id}`});
+		res.status(201).json({ "msg": `user ${userInfo.email} created book id: ${book._id}` });
 	} catch (err) {
 		console.log(err);
 	}
 });
 
+// match URL http://localhost:4001/api/books/:id
 router.delete("/:id", verifyToken, async (req, res) => {
 	try {
 		// await Book.findByIdAndDelete({ _id: req.params.id })
 		// res.status(200).json({ "msg": "Book ID:" + req.params.id + " is deleted" });
-		
+
 		// or
 
 		let book = await Book.countDocuments({ _id: req.params.id })

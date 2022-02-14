@@ -14,6 +14,7 @@ const schema = Joi
     abortEarly: false
   })
 
+// match URL http://localhost:4001/api/user/register
 router.post("/register", async (req, res) => {
   // validate data sent in HTTP body
   const validation = schema.validate(req.body);
@@ -43,17 +44,18 @@ router.post("/register", async (req, res) => {
 
 })
 
+// match URL http://localhost:4001/api/user/login
 router.post("/login", async (req, res) => {
   // TODO login validation
 
   // check credentials
   const user = await User.findOne({ email: req.body.email })
-  if(!user) return res.status(400).send({ "msg": "bad credentials" })
+  if (!user) return res.status(400).send({ "msg": "bad credentials" })
   const validPass = await bcrypt.compare(req.body.password, user.password)
-  if(!validPass) return res.status(400).send({ "msg": "bad credentials" })
+  if (!validPass) return res.status(400).send({ "msg": "bad credentials" })
 
   // put token in header
-  const token = jwt.sign({_id: user._id}, process.env.JWT_SERVER_SECRET)
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SERVER_SECRET)
   res.header('Authorization', `Bearer ${token}`).send({ "msg": "token is in header" })
 })
 
